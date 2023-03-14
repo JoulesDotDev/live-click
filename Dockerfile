@@ -38,8 +38,8 @@ ENV EXS_DRY_RUN="true"
 ENV MIX_INSTALL_DIR="/app/.mix"
 
 # install mix dependencies
-COPY run.exs ./
-RUN elixir ./run.exs
+COPY script.exs ./
+RUN elixir ./script.exs
 
 # start a new build stage so that the final image will only contain
 # the compiled release and other runtime necessities
@@ -59,9 +59,9 @@ ENV ERL_AFLAGS "-proto_dist inet6_tcp"
 
 # Only copy the final release from the build stage
 COPY --from=builder --chown=nobody:root /app/.mix/ ./.mix
-COPY --from=builder --chown=nobody:root /app/run.exs ./
+COPY --from=builder --chown=nobody:root /app/script.exs ./
 
 RUN mix local.hex --force && \
     mix local.rebar --force
 
-CMD ["elixir", "/app/run.exs"]
+CMD ["elixir", "/app/script.exs"]
