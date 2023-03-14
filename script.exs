@@ -1,10 +1,15 @@
 host = if app = System.get_env("FLY_APP_NAME"), do: "#{app}.fly.dev", else: "localhost"
 
+Application.put_env(:phoenix, :json_library, Jason)
 Application.put_env(:sample, SamplePhoenix.Endpoint,
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [
+    ip: {0, 0, 0, 0, 0, 0, 0, 0},
+    port: String.to_integer(System.get_env("PORT") || "4000"),
+    transport_options: [socket_opts: [:inet6]]
+  ],
   server: true,
-  live_view: [signing_salt: "nfjkh289fhwehflh430feljgh4h5ghrgvxc988nk"],
-  secret_key_base: String.duplicate("a", 64),
+  live_view: [signing_salt: :crypto.strong_rand_bytes(8) |> Base.encode16()],
+  secret_key_base: :crypto.strong_rand_bytes(32) |> Base.encode16(),
   pubsub_server: SamplePhoenix.PubSub
 )
 
