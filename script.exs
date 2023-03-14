@@ -68,7 +68,7 @@ defmodule SamplePhoenix.SampleLive do
 
   def render(assigns) do
     ~H"""
-
+    <p><%= @count %></p>
     <button phx-click="inc">+</button>
     <button phx-click="dec">-</button>
     """
